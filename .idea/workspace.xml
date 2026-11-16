@@ -5,15 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed719868-cf90-46ec-800e-a7386b3437a1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/chats.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/favorites.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/profile.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/search.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/searchCategories.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/i18n/searchTranslations.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/screens/SearchScreen.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/styles/search.styles.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/search.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/search.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="11" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="ExternalProjectsManager">
@@ -38,18 +36,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "Austin7V"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Austin7V&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Austin7V/meetup-app.git",
-    "accountId": "41897073-cb2f-46e4-8d2e-dca927b1bbc4"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Austin7V/meetup-app.git&quot;,
+    &quot;accountId&quot;: &quot;41897073-cb2f-46e4-8d2e-dca927b1bbc4&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -58,21 +56,21 @@
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
       <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0000000729463385" />
-      <entry key="S5" value="1.0025384586532002" />
-      <entry key="S10" value="1.1048230401287458" />
-      <entry key="S30" value="2.8580981596143564" />
-      <entry key="S60" value="5.350876414408565" />
-      <entry key="M2" value="7.849594916425425" />
-      <entry key="M5" value="10.079443679013444" />
-      <entry key="M10" value="10.989699509570183" />
-      <entry key="M15" value="11.314796192504627" />
-      <entry key="M30" value="11.651417701912639" />
-      <entry key="H1" value="11.824185838630118" />
-      <entry key="H2" value="11.911708617440585" />
-      <entry key="H4" value="11.955757785872999" />
-      <entry key="D1" value="11.992612853545479" />
-      <entry key="W1" value="11.998944363621716" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0000000000000084" />
+      <entry key="S30" value="1.0000561672540702" />
+      <entry key="S60" value="1.0237207243379571" />
+      <entry key="M2" value="1.5226353224567808" />
+      <entry key="M5" value="4.410178937405742" />
+      <entry key="M10" value="7.392284861046034" />
+      <entry key="M15" value="8.88424789296344" />
+      <entry key="M30" value="10.726028536694855" />
+      <entry key="H1" value="11.803130705827957" />
+      <entry key="H2" value="12.385792194431188" />
+      <entry key="H4" value="12.688847805338016" />
+      <entry key="D1" value="12.947569897309688" />
+      <entry key="W1" value="12.992495871006982" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -94,23 +92,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="3.4096897524176616E-5" />
-      <entry key="MS500" value="0.12780356632624026" />
-      <entry key="S2" value="0.5979099634877609" />
-      <entry key="S5" value="0.8163717158035649" />
-      <entry key="S10" value="0.9998444793946296" />
-      <entry key="S30" value="2.779382948778605" />
-      <entry key="S60" value="5.286118441792246" />
-      <entry key="M2" value="7.806138776299687" />
-      <entry key="M5" value="10.058451247358523" />
-      <entry key="M10" value="10.978501553135635" />
-      <entry key="M15" value="11.307166639879984" />
-      <entry key="M30" value="11.647518630558034" />
-      <entry key="H1" value="11.822214812963978" />
-      <entry key="H2" value="11.910717679262286" />
-      <entry key="H4" value="11.95526095378966" />
-      <entry key="D1" value="11.992529858325979" />
-      <entry key="W1" value="11.998932502504434" />
+      <entry key="MS100" value="0.17313868351386558" />
+      <entry key="MS500" value="0.7041721134560404" />
+      <entry key="S2" value="0.9160511105317987" />
+      <entry key="S5" value="0.9655346908231331" />
+      <entry key="S10" value="0.982616247994683" />
+      <entry key="S30" value="0.9942261310565167" />
+      <entry key="S60" value="1.02051514526981" />
+      <entry key="M2" value="1.5182816431985189" />
+      <entry key="M5" value="4.402492183122522" />
+      <entry key="M10" value="7.385479206801815" />
+      <entry key="M15" value="8.878736722284888" />
+      <entry key="M30" value="10.722676363393637" />
+      <entry key="H1" value="11.80128117268631" />
+      <entry key="H2" value="12.384820651253536" />
+      <entry key="H4" value="12.688349886798134" />
+      <entry key="D1" value="12.947485184111496" />
+      <entry key="W1" value="12.992483726306762" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -125,30 +123,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "searchscreen",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/sergey/Desktop/git/meetup-app",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Users/sergey/.nvm/versions/node/v24.15.0/lib/node_modules/typescript/lib"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;searchscreen&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/sergey/Desktop/git/meetup-app&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/sergey/.nvm/versions/node/v24.15.0/lib/node_modules/typescript/lib&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="meetup-app" />

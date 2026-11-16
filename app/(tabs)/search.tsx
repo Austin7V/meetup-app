@@ -1,10 +1,6 @@
 
-import { View, Text } from "react-native";
+import SearchScreen from "../../src/screens/SearchScreen";
 
-export default function SearchScreen() {
-    return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text>🔎 Поиск людей</Text>
-        </View>
-    );
+export default function SearchTab() {
+    return <SearchScreen />;
 }
