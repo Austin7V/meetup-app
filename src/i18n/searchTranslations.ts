@@ -1,6 +1,7 @@
 
 import type { SearchCategoryId } from "../constants/searchCategories";
 import type { Language } from "./translations";
+import type { GamePlatformId } from "../constants/gamePlatforms";
 
 export const searchTranslations = {
     ru: {
@@ -20,6 +21,15 @@ export const searchTranslations = {
             bowling: "Боулинг",
             walking: "Прогулки",
             parties: "Вечеринки",
+        },
+        platformTitle: "Выбери платформу",
+        platformHint: "На чём ты играешь?",
+        close: "Закрыть",
+
+        platforms: {
+            pc: "ПК",
+            playstation: "PlayStation",
+            xbox: "Xbox",
         },
     },
 
@@ -41,6 +51,15 @@ export const searchTranslations = {
             walking: "Spazieren",
             parties: "Partys",
         },
+        platformTitle: "Plattform auswählen",
+        platformHint: "Worauf spielst du?",
+        close: "Schließen",
+
+        platforms: {
+            pc: "PC",
+            playstation: "PlayStation",
+            xbox: "Xbox",
+        },
     },
 
     en: {
@@ -61,6 +80,15 @@ export const searchTranslations = {
             walking: "Walking",
             parties: "Parties",
         },
+        platformTitle: "Choose your platform",
+        platformHint: "Where do you play?",
+        close: "Close",
+
+        platforms: {
+            pc: "PC",
+            playstation: "PlayStation",
+            xbox: "Xbox",
+        },
     },
 } satisfies Record<
     Language,
@@ -74,5 +102,9 @@ export const searchTranslations = {
         searchButton: string;
         selectCategory: string;
         categories: Record<SearchCategoryId, string>;
+        platformTitle: string;
+        platformHint: string;
+        close: string;
+        platforms: Record<GamePlatformId, string>;
     }
 >;

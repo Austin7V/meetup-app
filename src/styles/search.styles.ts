@@ -162,4 +162,73 @@ export const searchStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "700",
     },
+
+    platformOverlay: {
+        flex: 1,
+        justifyContent: "flex-end",
+        backgroundColor: "rgba(0, 0, 0, 0.4)",
+    },
+
+    platformSheet: {
+        backgroundColor: theme.colors.surface,
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
+        paddingHorizontal: 20,
+        paddingTop: 22,
+        paddingBottom: 40,
+    },
+
+    platformHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 20,
+    },
+
+    platformTitle: {
+        fontSize: 21,
+        fontWeight: "700",
+        color: theme.colors.title,
+    },
+
+    platformHint: {
+        fontSize: 14,
+        color: "#728096",
+        marginTop: 5,
+    },
+
+    platformClose: {
+        fontSize: 15,
+        fontWeight: "600",
+        color: theme.colors.primary,
+    },
+
+    platformOption: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 17,
+        paddingHorizontal: 16,
+        marginBottom: 10,
+        borderRadius: 14,
+        backgroundColor: "#F5F7FB",
+        borderWidth: 1,
+        borderColor: "#E4E9F1",
+    },
+
+    platformOptionSelected: {
+        backgroundColor: "#E8F0FF",
+        borderColor: theme.colors.primary,
+    },
+
+    platformIcon: {
+        fontSize: 25,
+        marginRight: 15,
+    },
+
+    platformName: {
+        fontSize: 17,
+        fontWeight: "600",
+        color: theme.colors.title,
+    },
+
 });

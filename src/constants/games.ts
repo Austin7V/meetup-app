@@ -1,0 +1,91 @@
+export const games = [
+    // MMORPG / RPG
+    { id: "wow", name: "World of Warcraft" },
+    { id: "ffxiv", name: "Final Fantasy XIV" },
+    { id: "eso", name: "The Elder Scrolls Online" },
+    { id: "guild-wars-2", name: "Guild Wars 2" },
+    { id: "black-desert", name: "Black Desert Online" },
+    { id: "lost-ark", name: "Lost Ark" },
+    { id: "albion-online", name: "Albion Online" },
+    { id: "throne-liberty", name: "Throne and Liberty" },
+    { id: "new-world", name: "New World" },
+    { id: "diablo-4", name: "Diablo IV" },
+    { id: "path-of-exile-2", name: "Path of Exile 2" },
+    { id: "elden-ring", name: "Elden Ring" },
+    { id: "baldurs-gate-3", name: "Baldur's Gate 3" },
+    { id: "monster-hunter", name: "Monster Hunter Wilds" },
+
+    // Shooter / Action
+    { id: "cs2", name: "Counter-Strike 2" },
+    { id: "valorant", name: "Valorant" },
+    { id: "fortnite", name: "Fortnite" },
+    { id: "call-of-duty", name: "Call of Duty" },
+    { id: "warzone", name: "Call of Duty: Warzone" },
+    { id: "apex", name: "Apex Legends" },
+    { id: "pubg", name: "PUBG: Battlegrounds" },
+    { id: "overwatch-2", name: "Overwatch 2" },
+    { id: "rainbow-six", name: "Rainbow Six Siege" },
+    { id: "destiny-2", name: "Destiny 2" },
+    { id: "battlefield", name: "Battlefield" },
+    { id: "the-finals", name: "THE FINALS" },
+    { id: "tarkov", name: "Escape from Tarkov" },
+    { id: "helldivers-2", name: "Helldivers 2" },
+    { id: "warframe", name: "Warframe" },
+
+    // Survival / Multiplayer
+    { id: "minecraft", name: "Minecraft" },
+    { id: "roblox", name: "Roblox" },
+    { id: "gta-online", name: "GTA Online" },
+    { id: "rust", name: "Rust" },
+    { id: "ark", name: "ARK: Survival Ascended" },
+    { id: "dayz", name: "DayZ" },
+    { id: "palworld", name: "Palworld" },
+    { id: "terraria", name: "Terraria" },
+    { id: "stardew", name: "Stardew Valley" },
+    { id: "sea-of-thieves", name: "Sea of Thieves" },
+    { id: "lethal-company", name: "Lethal Company" },
+    { id: "phasmophobia", name: "Phasmophobia" },
+    { id: "dead-by-daylight", name: "Dead by Daylight" },
+    { id: "among-us", name: "Among Us" },
+    { id: "it-takes-two", name: "It Takes Two" },
+    { id: "split-fiction", name: "Split Fiction" },
+
+    // MOBA / Strategie
+    { id: "lol", name: "League of Legends" },
+    { id: "dota-2", name: "Dota 2" },
+    { id: "tft", name: "Teamfight Tactics" },
+    { id: "hearthstone", name: "Hearthstone" },
+    { id: "starcraft-2", name: "StarCraft II" },
+    { id: "age-of-empires-4", name: "Age of Empires IV" },
+    { id: "civilization-7", name: "Civilization VII" },
+
+    // Sport / Racing
+    { id: "rocket-league", name: "Rocket League" },
+    { id: "ea-fc", name: "EA SPORTS FC" },
+    { id: "nba-2k", name: "NBA 2K" },
+    { id: "f1", name: "F1" },
+    { id: "forza-horizon-5", name: "Forza Horizon 5" },
+    { id: "gran-turismo-7", name: "Gran Turismo 7" },
+    { id: "mario-kart", name: "Mario Kart" },
+
+    // Nintendo
+    { id: "smash-bros", name: "Super Smash Bros. Ultimate" },
+    { id: "animal-crossing", name: "Animal Crossing" },
+    { id: "splatoon-3", name: "Splatoon 3" },
+    { id: "pokemon", name: "Pokémon" },
+
+    // Mobile / Cross-platform
+    { id: "genshin", name: "Genshin Impact" },
+    { id: "honkai", name: "Honkai: Star Rail" },
+    { id: "zenless", name: "Zenless Zone Zero" },
+    { id: "wuthering", name: "Wuthering Waves" },
+    { id: "brawl-stars", name: "Brawl Stars" },
+    { id: "clash-royale", name: "Clash Royale" },
+    { id: "clash-of-clans", name: "Clash of Clans" },
+    { id: "pokemon-go", name: "Pokémon GO" },
+    { id: "pubg-mobile", name: "PUBG Mobile" },
+    { id: "mobile-legends", name: "Mobile Legends: Bang Bang" },
+    { id: "wild-rift", name: "League of Legends: Wild Rift" },
+] as const;
+
+export type GameId = (typeof games)[number]["id"];

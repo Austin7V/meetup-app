@@ -2,6 +2,7 @@
 import { useState } from "react";
 import {
     Alert,
+    Modal,
     Pressable,
     StatusBar,
     Text,
@@ -21,6 +22,10 @@ import {
 import type { Language } from "../i18n/translations";
 import { searchTranslations } from "../i18n/searchTranslations";
 import { searchStyles as styles } from "../styles/search.styles";
+import {
+    gamePlatforms,
+    type GamePlatformId,
+} from "../constants/gamePlatforms";
 
 export default function SearchScreen() {
     const [language, setLanguage] = useState<Language>("ru");
@@ -28,6 +33,15 @@ export default function SearchScreen() {
     const insets = useSafeAreaInsets();
     const [selectedCategory, setSelectedCategory] =
         useState<SearchCategoryId | null>(null);
+    const [selectedPlatform, setSelectedPlatform] =
+        useState<GamePlatformId | null>(null);
+
+    const [platformModalVisible, setPlatformModalVisible] =
+        useState(false);
+
+    const canSearch =
+        selectedCategory !== null &&
+        (selectedCategory !== "gaming" || selectedPlatform !== null);
 
     const { height } = useWindowDimensions();
 
@@ -35,6 +49,12 @@ export default function SearchScreen() {
         height < 700 ? 60 : height < 800 ? 75 : 90;
 
     function selectCategory(id: SearchCategoryId) {
+        if (id === "gaming") {
+            setSelectedCategory("gaming");
+            setPlatformModalVisible(true);
+            return;
+        }
+
         setSelectedCategory((current) =>
             current === id ? null : id
         );
@@ -130,7 +150,9 @@ export default function SearchScreen() {
                                         selected && styles.categoryLabelSelected,
                                     ]}
                                 >
-                                    {t.categories[category.id]}
+                                    {category.id === "gaming" && selectedPlatform
+                                        ? `${t.categories.gaming} · ${t.platforms[selectedPlatform]}`
+                                        : t.categories[category.id]}
                                 </Text>
                             </Pressable>
                         );
@@ -149,12 +171,12 @@ export default function SearchScreen() {
                     </View>
 
                     <Pressable
-                        disabled={!selectedCategory}
+                        disabled={!canSearch}
                         onPress={handleSearch}
                         accessibilityRole="button"
                         style={[
                             styles.button,
-                            !selectedCategory && styles.buttonDisabled,
+                            !canSearch && styles.buttonDisabled
                         ]}
                     >
                         <Text style={styles.buttonText}>
@@ -163,6 +185,65 @@ export default function SearchScreen() {
                     </Pressable>
                 </View>
             </View>
+            <Modal
+                visible={platformModalVisible}
+                transparent
+                animationType="slide"
+                onRequestClose={() => setPlatformModalVisible(false)}
+            >
+                <View style={styles.platformOverlay}>
+                    <View style={styles.platformSheet}>
+                        <View style={styles.platformHeader}>
+                            <View>
+                                <Text style={styles.platformTitle}>
+                                    🎮 {t.platformTitle}
+                                </Text>
+
+                                <Text style={styles.platformHint}>
+                                    {t.platformHint}
+                                </Text>
+                            </View>
+
+                            <Pressable
+                                onPress={() => setPlatformModalVisible(false)}
+                                accessibilityRole="button"
+                            >
+                                <Text style={styles.platformClose}>
+                                    {t.close}
+                                </Text>
+                            </Pressable>
+                        </View>
+
+                        {gamePlatforms.map((platform) => (
+                            <Pressable
+                                key={platform.id}
+                                onPress={() => {
+                                    setSelectedPlatform(platform.id);
+                                    setPlatformModalVisible(false);
+                                }}
+                                style={[
+                                    styles.platformOption,
+                                    selectedPlatform === platform.id &&
+                                    styles.platformOptionSelected,
+                                ]}
+                                accessibilityRole="button"
+                                accessibilityState={{
+                                    selected: selectedPlatform === platform.id,
+                                }}
+                            >
+                                <Text style={styles.platformIcon}>
+                                    {platform.icon}
+                                </Text>
+
+                                <Text style={styles.platformName}>
+                                    {t.platforms[platform.id]}
+                                </Text>
+                            </Pressable>
+                        ))}
+                    </View>
+                </View>
+            </Modal>
+
         </SafeAreaView>
     );
 }
