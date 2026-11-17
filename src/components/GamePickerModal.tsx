@@ -52,12 +52,15 @@ export default function GamePickerModal({
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
+    const [showSelectedOnly, setShowSelectedOnly] =
+        useState(false);
 
     useEffect(() => {
         if (!visible) return;
 
         setQuery("");
         setDraftSelected(selectedGames);
+        setShowSelectedOnly(false);
     }, [visible, selectedGames]);
 
 
@@ -151,7 +154,26 @@ export default function GamePickerModal({
                         clearButtonMode="while-editing"
                     />
 
-                    {loading ? (
+                    <View style={styles.filterRow}>
+                        <Text style={styles.selectedCount}>
+                            {t.selectedCount}: {draftSelected.length}
+                        </Text>
+
+                        <Pressable
+                            style={styles.filterButton}
+                            onPress={() =>
+                                setShowSelectedOnly((current) => !current)
+                            }
+                            accessibilityRole="button"
+                        >
+                            <Text style={styles.filterButtonText}>
+                                {showSelectedOnly ? t.showAll : t.showSelected}
+                            </Text>
+                        </Pressable>
+                    </View>
+
+
+                    {loading && !showSelectedOnly ? (
                         <View style={styles.messageContainer}>
                             <ActivityIndicator
                                 size="large"
@@ -161,7 +183,7 @@ export default function GamePickerModal({
                                 {t.loading}
                             </Text>
                         </View>
-                    ) : error ? (
+                    ) : error && !showSelectedOnly ? (
                         <View style={styles.messageContainer}>
                             <Text style={styles.message}>
                                 {t.error}
@@ -171,14 +193,14 @@ export default function GamePickerModal({
                         <FlatList
                             style={styles.list}
                             contentContainerStyle={styles.listContent}
-                            data={results}
+                            data={showSelectedOnly ? draftSelected : results}
                             keyExtractor={(item) => String(item.id)}
                             keyboardShouldPersistTaps="handled"
                             keyboardDismissMode="on-drag"
                             showsVerticalScrollIndicator={false}
                             ListEmptyComponent={
                                 <Text style={styles.message}>
-                                    {t.empty}
+                                    {showSelectedOnly ? t.noneSelected : t.empty}
                                 </Text>
                             }
                             renderItem={({ item }) => {

@@ -141,4 +141,29 @@ export const gamePickerStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "700",
     },
+    filterRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 12,
+    },
+
+    selectedCount: {
+        fontSize: 14,
+        fontWeight: "600",
+        color: theme.colors.title,
+    },
+
+    filterButton: {
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 10,
+        backgroundColor: "#E8F0FF",
+    },
+
+    filterButtonText: {
+        fontSize: 13,
+        fontWeight: "600",
+        color: theme.colors.primary,
+    },
 });

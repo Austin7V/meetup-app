@@ -11,6 +11,10 @@ export const gamePickerTranslations = {
         cancel: "Закрыть",
         confirm: "Готово",
         source: "Данные и изображения: RAWG",
+        selectedCount: "Выбрано",
+        showSelected: "Выбранные",
+        showAll: "Все игры",
+        noneSelected: "Ты пока не выбрал ни одной игры",
     },
 
     de: {
@@ -22,6 +26,10 @@ export const gamePickerTranslations = {
         cancel: "Schließen",
         confirm: "Fertig",
         source: "Daten und Bilder: RAWG",
+        selectedCount: "Ausgewählt",
+        showSelected: "Ausgewählte",
+        showAll: "Alle Spiele",
+        noneSelected: "Noch keine Spiele ausgewählt",
     },
 
     en: {
@@ -33,5 +41,9 @@ export const gamePickerTranslations = {
         cancel: "Close",
         confirm: "Done",
         source: "Data and images: RAWG",
+        selectedCount: "Selected",
+        showSelected: "Selected games",
+        showAll: "All games",
+        noneSelected: "No games selected yet",
     },
 } satisfies Record<Language, Record<string, string>>;
