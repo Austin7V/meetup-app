@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
     Alert,
     Modal,
@@ -26,6 +26,8 @@ import {
     gamePlatforms,
     type GamePlatformId,
 } from "../constants/gamePlatforms";
+import GamePickerModal from "../components/GamePickerModal";
+import type { Game } from "../services/gamesApi";
 
 export default function SearchScreen() {
     const [language, setLanguage] = useState<Language>("ru");
@@ -39,9 +41,15 @@ export default function SearchScreen() {
     const [platformModalVisible, setPlatformModalVisible] =
         useState(false);
 
+
+    const [selectedGames, setSelectedGames] = useState<Game[]>([]);
+    const [gamePickerVisible, setGamePickerVisible] = useState(false);
+    const openGamePickerAfterDismiss = useRef(false);
+
     const canSearch =
         selectedCategory !== null &&
-        (selectedCategory !== "gaming" || selectedPlatform !== null);
+        (selectedCategory !== "gaming" ||
+            (selectedPlatform !== null && selectedGames.length > 0));
 
     const { height } = useWindowDimensions();
 
@@ -151,7 +159,7 @@ export default function SearchScreen() {
                                     ]}
                                 >
                                     {category.id === "gaming" && selectedPlatform
-                                        ? `${t.categories.gaming} · ${t.platforms[selectedPlatform]}`
+                                        ? `${t.categories.gaming} · ${t.platforms[selectedPlatform]} (${selectedGames.length})`
                                         : t.categories[category.id]}
                                 </Text>
                             </Pressable>
@@ -190,6 +198,12 @@ export default function SearchScreen() {
                 transparent
                 animationType="slide"
                 onRequestClose={() => setPlatformModalVisible(false)}
+                onDismiss={() => {
+                    if (openGamePickerAfterDismiss.current) {
+                        openGamePickerAfterDismiss.current = false;
+                        setGamePickerVisible(true);
+                    }
+                }}
             >
                 <View style={styles.platformOverlay}>
                     <View style={styles.platformSheet}>
@@ -218,7 +232,11 @@ export default function SearchScreen() {
                             <Pressable
                                 key={platform.id}
                                 onPress={() => {
+                                    if (selectedPlatform !== platform.id) {
+                                        setSelectedGames([]);
+                                    }
                                     setSelectedPlatform(platform.id);
+                                    openGamePickerAfterDismiss.current = true;
                                     setPlatformModalVisible(false);
                                 }}
                                 style={[
@@ -243,6 +261,19 @@ export default function SearchScreen() {
                     </View>
                 </View>
             </Modal>
+
+            <GamePickerModal
+                visible={gamePickerVisible}
+                platform={selectedPlatform}
+                language={language}
+                selectedGames={selectedGames}
+                onClose={() => setGamePickerVisible(false)}
+                onConfirm={(games) => {
+                    setSelectedGames(games);
+                    setGamePickerVisible(false);
+                }}
+            />
+
 
         </SafeAreaView>
     );
