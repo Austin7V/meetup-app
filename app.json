@@ -25,7 +25,13 @@
       "@react-native-community/datetimepicker",
       "expo-router",
       "expo-status-bar",
-      "expo-image"
+      "expo-image",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Meetup uses your location to find nearby bars and activities."
+        }
+      ]
     ]
   }
 }
