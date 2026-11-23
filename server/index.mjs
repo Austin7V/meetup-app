@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 
 const PORT = 3002;
 const API_KEY = process.env.RAWG_API_KEY;
-
+const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
 if (!API_KEY) {
     throw new Error("RAWG_API_KEY is missing");
 }
@@ -27,6 +27,103 @@ const server = createServer(async (req, res) => {
         req.url ?? "/",
         "http://localhost"
     );
+
+    if (req.method === "GET" && requestUrl.pathname === "/bars") {
+
+        const latitude = Number(requestUrl.searchParams.get("lat"));
+        const longitude = Number(requestUrl.searchParams.get("lng"));
+        const radius = Number(requestUrl.searchParams.get("radius"));
+
+        if (
+            !Number.isFinite(latitude) ||
+            !Number.isFinite(longitude) ||
+            latitude < -90 ||
+            latitude > 90 ||
+            longitude < -180 ||
+            longitude > 180 ||
+            !Number.isFinite(radius) ||
+            radius < 1 ||
+            radius > 50 ||
+            !requestUrl.searchParams.has("lat") ||
+            !requestUrl.searchParams.has("lng") ||
+            !requestUrl.searchParams.has("radius")
+        ) {
+            sendJson(res, 400, {
+                error: "Invalid coordinates or radius (1-50 km)",
+            });
+            return;
+        }
+
+        if (!GOOGLE_PLACES_API_KEY) {
+            sendJson(res, 503, {
+                error: "Google Places is not configured",
+            });
+            return;
+        }
+
+        const requestBody = {
+            includedTypes: ["bar"],
+            maxResultCount: 20,
+            rankPreference: "DISTANCE",
+            locationRestriction: {
+                circle: {
+                    center: { latitude, longitude },
+                    radius: radius * 1000,
+                },
+            },
+        };
+
+        try {
+            const response = await fetch(
+                "https://places.googleapis.com/v1/places:searchNearby",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Goog-Api-Key": GOOGLE_PLACES_API_KEY,
+
+                        "X-Goog-FieldMask":
+                            "places.id,places.displayName,places.formattedAddress,places.location",
+                    },
+                    body: JSON.stringify(requestBody),
+                    signal: AbortSignal.timeout(10000),
+                }
+            );
+
+            if (!response.ok) {
+                console.error("Google Places status:", response.status);
+
+                sendJson(res, 502, {
+                    error: "Places provider unavailable",
+                });
+                return;
+            }
+
+            const data = await response.json();
+
+            const bars = (data.places ?? []).map((place) => ({
+                id: place.id,
+                name: place.displayName?.text ?? "",
+                address: place.formattedAddress ?? "",
+                latitude: place.location?.latitude ?? null,
+                longitude: place.location?.longitude ?? null,
+            }));
+
+            sendJson(res, 200, { bars });
+        } catch (error) {
+            console.error(
+                "Places request failed:",
+                error instanceof Error ? error.message : error
+            );
+
+            sendJson(res, 502, {
+                error: "Unable to load bars",
+            });
+        }
+
+        return;
+    }
+
 
     if (req.method !== "GET" || requestUrl.pathname !== "/games") {
         sendJson(res, 404, { error: "Route not found" });
