@@ -22,36 +22,50 @@ import {
 import type { Language } from "../i18n/translations";
 import { searchTranslations } from "../i18n/searchTranslations";
 import { searchStyles as styles } from "../styles/search.styles";
+
 import {
     gamePlatforms,
     type GamePlatformId,
 } from "../constants/gamePlatforms";
+
 import GamePickerModal from "../components/GamePickerModal";
+import BarPickerModal from "../components/BarPickerModal";
 import type { Game } from "../services/gamesApi";
+import { getUserCoordinates } from "../services/locationService";
+import { getBars, type Bar } from "../services/barsApi";
+import { barPickerTranslations } from "../i18n/barPickerTranslations";
 
 export default function SearchScreen() {
     const [language, setLanguage] = useState<Language>("ru");
     const t = searchTranslations[language];
+    const barT = barPickerTranslations[language];
+
     const insets = useSafeAreaInsets();
+    const { height } = useWindowDimensions();
+
     const [selectedCategory, setSelectedCategory] =
         useState<SearchCategoryId | null>(null);
+
     const [selectedPlatform, setSelectedPlatform] =
         useState<GamePlatformId | null>(null);
 
     const [platformModalVisible, setPlatformModalVisible] =
         useState(false);
 
-
     const [selectedGames, setSelectedGames] = useState<Game[]>([]);
     const [gamePickerVisible, setGamePickerVisible] = useState(false);
+
     const openGamePickerAfterDismiss = useRef(false);
+
+    const [barModalVisible, setBarModalVisible] = useState(false);
+    const [barLoading, setBarLoading] = useState(false);
+    const [foundBars, setFoundBars] = useState<Bar[]>([]);
+    const [selectedBar, setSelectedBar] = useState<Bar | null>(null);
 
     const canSearch =
         selectedCategory !== null &&
         (selectedCategory !== "gaming" ||
             (selectedPlatform !== null && selectedGames.length > 0));
-
-    const { height } = useWindowDimensions();
 
     const categoryHeight =
         height < 700 ? 60 : height < 800 ? 75 : 90;
@@ -60,6 +74,12 @@ export default function SearchScreen() {
         if (id === "gaming") {
             setSelectedCategory("gaming");
             setPlatformModalVisible(true);
+            return;
+        }
+
+        if (id === "bars") {
+            setSelectedCategory(id);
+            setBarModalVisible(true);
             return;
         }
 
@@ -74,7 +94,67 @@ export default function SearchScreen() {
             return;
         }
 
+        if (selectedCategory === "bars") {
+            setBarModalVisible(true);
+            return;
+        }
+
         Alert.alert(t.title, t.comingSoon);
+    }
+
+
+
+
+    async function handleBarSearch(radius: number) {
+        if (barLoading) return;
+
+        if (radius > 50) {
+            Alert.alert(
+                barT.radiusErrorTitle,
+                barT.radiusErrorMessage
+            );
+            return;
+        }
+
+        setBarLoading(true);
+        setFoundBars([]);
+
+        try {
+            const coordinates = await getUserCoordinates();
+
+            const bars = await getBars({
+                coordinates,
+                radius,
+            });
+
+            setFoundBars(bars);
+
+            if (bars.length === 0) {
+                Alert.alert(
+                    barT.noBarsTitle,
+                    barT.noBarsMessage
+                );
+            }
+        } catch (error) {
+            if (
+                error instanceof Error &&
+                error.message === "LOCATION_PERMISSION_DENIED"
+            ) {
+                Alert.alert(
+                    barT.locationErrorTitle,
+                    barT.locationErrorMessage
+                );
+            } else {
+                console.error("Bar search failed:", error);
+
+                Alert.alert(
+                    barT.searchErrorTitle,
+                    barT.searchErrorMessage
+                );
+            }
+        } finally {
+            setBarLoading(false);
+        }
     }
 
     return (
@@ -184,7 +264,7 @@ export default function SearchScreen() {
                         accessibilityRole="button"
                         style={[
                             styles.button,
-                            !canSearch && styles.buttonDisabled
+                            !canSearch && styles.buttonDisabled,
                         ]}
                     >
                         <Text style={styles.buttonText}>
@@ -235,6 +315,7 @@ export default function SearchScreen() {
                                     if (selectedPlatform !== platform.id) {
                                         setSelectedGames([]);
                                     }
+
                                     setSelectedPlatform(platform.id);
                                     openGamePickerAfterDismiss.current = true;
                                     setPlatformModalVisible(false);
@@ -274,7 +355,23 @@ export default function SearchScreen() {
                 }}
             />
 
+            <BarPickerModal
+                visible={barModalVisible}
+                language={language}
+                bars={foundBars}
+                loading={barLoading}
+                onClose={() => setBarModalVisible(false)}
+                onSearch={handleBarSearch}
+                onConfirm={(bar) => {
+                    setSelectedBar(bar);
+                    setBarModalVisible(false);
 
+                    Alert.alert(
+                        barT.selectedBar,
+                        `${bar.name}\n${bar.address}`
+                    );
+                }}
+            />
         </SafeAreaView>
     );
 }
