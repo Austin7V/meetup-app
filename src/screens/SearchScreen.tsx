@@ -61,6 +61,7 @@ export default function SearchScreen() {
     const [barLoading, setBarLoading] = useState(false);
     const [foundBars, setFoundBars] = useState<Bar[]>([]);
     const [selectedBar, setSelectedBar] = useState<Bar | null>(null);
+    const [barDetailsVisible, setBarDetailsVisible] = useState(false);
 
     const canSearch =
         selectedCategory !== null &&
@@ -249,14 +250,46 @@ export default function SearchScreen() {
 
                 <View style={styles.bottomSection}>
                     <View style={styles.distanceContainer}>
-                        <Text style={styles.distanceTitle}>
-                            📍 {t.distance}
-                        </Text>
 
-                        <Text style={styles.distanceValue}>
-                            {t.comingSoon}
-                        </Text>
+                        {selectedCategory === "bars" && selectedBar ? (
+                            <>
+                                <Text style={styles.distanceTitle}>
+                                    🍸 {barT.selectedBar}
+                                </Text>
+                                <Pressable
+                                    onPress={() => setBarDetailsVisible(true)}
+                                    accessibilityRole="button"
+                                    accessibilityLabel={selectedBar.name}
+                                    style={styles.selectedBarButton}
+                                >
+                                    <Text
+                                        style={styles.distanceValue}
+                                        numberOfLines={1}
+                                        ellipsizeMode="tail"
+                                    >
+                                        {selectedBar.name}
+                                    </Text>
+
+                                    <Text style={styles.selectedBarArrow}>
+                                        ›
+                                    </Text>
+                                </Pressable>
+                            </>
+                        ) : (
+
+                            <>
+                                <Text style={styles.distanceTitle}>
+                                    📍 {t.distance}
+                                </Text>
+
+                                <Text style={styles.distanceValue}>
+                                    {t.comingSoon}
+                                </Text>
+                            </>
+                        )}
                     </View>
+
+
 
                     <Pressable
                         disabled={!canSearch}
@@ -365,13 +398,47 @@ export default function SearchScreen() {
                 onConfirm={(bar) => {
                     setSelectedBar(bar);
                     setBarModalVisible(false);
-
-                    Alert.alert(
-                        barT.selectedBar,
-                        `${bar.name}\n${bar.address}`
-                    );
                 }}
             />
+            <Modal
+                visible={barDetailsVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setBarDetailsVisible(false)}
+            >
+                <View style={styles.barDetailsOverlay}>
+                    <View style={styles.barDetailsCard}>
+                        <Text style={styles.barDetailsIcon}>
+                            🍸
+                        </Text>
+
+                        <Text style={styles.barDetailsTitle}>
+                            {selectedBar?.name}
+                        </Text>
+
+                        <View style={styles.barDetailsAddressRow}>
+                            <Text style={styles.barDetailsLocationIcon}>
+                                📍
+                            </Text>
+
+                            <Text style={styles.barDetailsAddress}>
+                                {selectedBar?.address}
+                            </Text>
+                        </View>
+
+                        <Pressable
+                            onPress={() => setBarDetailsVisible(false)}
+                            style={styles.barDetailsCloseButton}
+                            accessibilityRole="button"
+                        >
+                            <Text style={styles.barDetailsCloseText}>
+                                {barT.close}
+                            </Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+
         </SafeAreaView>
     );
 }
