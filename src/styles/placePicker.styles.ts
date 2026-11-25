@@ -1,8 +1,8 @@
 
 import { StyleSheet } from "react-native";
 
-// RU: Стили окна поиска и выбора баров.
-// DE: Styles für das Such- und Auswahlfenster.
+// RU: Универсальные стили поиска и выбора заведений.
+// DE: Universelle Styles für die Suche und Ortsauswahl.
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -94,8 +94,8 @@ export const styles = StyleSheet.create({
         marginTop: 4,
     },
 
-    // RU: Список найденных баров.
-    // DE: Liste der gefundenen Bars.
+    // RU: Список найденных заведений.
+    // DE: Liste der gefundenen Orte.
     resultsSection: {
         gap: 12,
     },
@@ -120,7 +120,7 @@ export const styles = StyleSheet.create({
         fontSize: 14,
         color: "#8992A3",
     },
-    barCard: {
+    placeCard: {
         flexDirection: "row",
         alignItems: "center",
         gap: 12,
@@ -131,20 +131,20 @@ export const styles = StyleSheet.create({
         padding: 16,
         minHeight: 78,
     },
-    barCardSelected: {
+    placeCardSelected: {
         borderColor: "#6478FF",
         backgroundColor: "#EEF0FF",
     },
-    barDetails: {
+    placeDetails: {
         flex: 1,
         gap: 6,
     },
-    barName: {
+    placeName: {
         fontSize: 16,
         fontWeight: "600",
         color: "#172033",
     },
-    barAddress: {
+    placeAddress: {
         fontSize: 13,
         lineHeight: 19,
         color: "#616B7D",
@@ -168,8 +168,8 @@ export const styles = StyleSheet.create({
         color: "#FFFFFF",
     },
 
-    // RU: Нижние кнопки.
-    // DE: Untere Schaltflächen.
+    // RU: Кнопки поиска и подтверждения.
+    // DE: Schaltflächen für Suche und Bestätigung.
     footer: {
         paddingHorizontal: 20,
         paddingTop: 12,
