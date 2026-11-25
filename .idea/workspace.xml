@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed719868-cf90-46ec-800e-a7386b3437a1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/BarPickerModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/i18n/barPickerTranslations.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/styles/barPicker.styles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/PlacePickerModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/i18n/placePickerTranslations.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/placesApi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/server/index.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/SearchScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/SearchScreen.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,23 +61,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0" />
-      <entry key="S60" value="1.0" />
-      <entry key="M2" value="1.0" />
-      <entry key="M5" value="1.0000000465042334" />
-      <entry key="M10" value="1.0003049726856676" />
-      <entry key="M15" value="1.0057084372117677" />
-      <entry key="M30" value="1.1068497668823627" />
-      <entry key="H1" value="1.4622764601631562" />
-      <entry key="H2" value="1.9615387729533142" />
-      <entry key="H4" value="2.3889796809173296" />
-      <entry key="D1" value="5.857623045984849" />
-      <entry key="W1" value="16.184922136053448" />
+      <entry key="MS100" value="1.0000756657531702" />
+      <entry key="MS500" value="1.149892489223889" />
+      <entry key="S2" value="1.6222214348016388" />
+      <entry key="S5" value="1.827138026173773" />
+      <entry key="S10" value="1.9094713509361427" />
+      <entry key="S30" value="1.9728132077501752" />
+      <entry key="S60" value="2.047148647424078" />
+      <entry key="M2" value="2.242801709917873" />
+      <entry key="M5" value="2.5718138534527153" />
+      <entry key="M10" value="2.7569199802246445" />
+      <entry key="M15" value="2.8352311844268265" />
+      <entry key="M30" value="3.008795056406779" />
+      <entry key="H1" value="3.396104935569032" />
+      <entry key="H2" value="3.9166919241527696" />
+      <entry key="H4" value="4.361527327332504" />
+      <entry key="D1" value="7.846366592112729" />
+      <entry key="W1" value="18.18047807757111" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -100,23 +99,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.17677669529663687" />
-      <entry key="MS500" value="0.7071067811865475" />
-      <entry key="S2" value="0.9170040432046712" />
-      <entry key="S5" value="0.9659363289248456" />
-      <entry key="S10" value="0.9828205985452511" />
-      <entry key="S30" value="0.9942404238175473" />
-      <entry key="S60" value="0.9971160533345892" />
-      <entry key="M2" value="0.9985569855219026" />
-      <entry key="M5" value="0.999422590529994" />
-      <entry key="M10" value="1.0000158236935435" />
-      <entry key="M15" value="1.0055111798234455" />
-      <entry key="M30" value="1.106709176263787" />
-      <entry key="H1" value="1.4621324316326116" />
-      <entry key="H2" value="1.9614149695088785" />
-      <entry key="H4" value="2.388895645947141" />
-      <entry key="D1" value="5.857580995673025" />
-      <entry key="W1" value="16.18490389407109" />
+      <entry key="MS100" value="0.97271640710162" />
+      <entry key="MS500" value="1.13825665534204" />
+      <entry key="S2" value="1.6144002508166917" />
+      <entry key="S5" value="1.8231508351122914" />
+      <entry key="S10" value="1.9073049020084998" />
+      <entry key="S30" value="1.9720267159967821" />
+      <entry key="S60" value="2.046580136337856" />
+      <entry key="M2" value="2.242244966022883" />
+      <entry key="M5" value="2.5714034971563695" />
+      <entry key="M10" value="2.756661504543134" />
+      <entry key="M15" value="2.8350409964325225" />
+      <entry key="M30" value="3.0086537670027678" />
+      <entry key="H1" value="3.3959608538659527" />
+      <entry key="H2" value="3.916567670110468" />
+      <entry key="H4" value="4.361442619209624" />
+      <entry key="D1" value="7.846324349765561" />
+      <entry key="W1" value="18.180459801629322" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -131,30 +130,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;searchScreen__locations&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/sergey/Desktop/git/meetup-app&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/sergey/.nvm/versions/node/v24.15.0/lib/node_modules/typescript/lib&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "searchScreen__locations",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/sergey/Desktop/git/meetup-app",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/sergey/.nvm/versions/node/v24.15.0/lib/node_modules/typescript/lib"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="meetup-app" />

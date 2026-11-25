@@ -230,5 +230,90 @@ export const searchStyles = StyleSheet.create({
         fontWeight: "600",
         color: theme.colors.title,
     },
+    selectedBarAddress: {
+        fontSize: 12,
+        color: "#8992A3",
+        marginTop: 4,
+    },
+
+    selectedBarButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 8,
+    },
+
+    selectedBarArrow: {
+        fontSize: 28,
+        color: "#6478FF",
+    },
+
+    barDetailsOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 24,
+    },
+
+    barDetailsCard: {
+        width: "100%",
+        maxWidth: 400,
+        backgroundColor: "#FFFFFF",
+        borderRadius: 22,
+        padding: 24,
+        alignItems: "center",
+    },
+
+    barDetailsIcon: {
+        fontSize: 38,
+        marginBottom: 14,
+    },
+
+    barDetailsTitle: {
+        fontSize: 22,
+        fontWeight: "700",
+        color: "#172033",
+        textAlign: "center",
+        marginBottom: 20,
+    },
+
+    barDetailsAddressRow: {
+        flexDirection: "row",
+        alignItems: "flex-start",
+        gap: 10,
+        width: "100%",
+        backgroundColor: "#F7F8FC",
+        padding: 16,
+        borderRadius: 14,
+        marginBottom: 24,
+    },
+
+    barDetailsLocationIcon: {
+        fontSize: 20,
+    },
+
+    barDetailsAddress: {
+        flex: 1,
+        fontSize: 15,
+        lineHeight: 22,
+        color: "#616B7D",
+    },
+
+    barDetailsCloseButton: {
+        width: "100%",
+        backgroundColor: "#6478FF",
+        borderRadius: 14,
+        minHeight: 50,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    barDetailsCloseText: {
+        fontSize: 16,
+        fontWeight: "700",
+        color: "#FFFFFF",
+    },
+
 
 });
