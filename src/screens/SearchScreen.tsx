@@ -18,6 +18,7 @@ import {
     searchCategories,
     type SearchCategoryId,
 } from "../constants/searchCategories";
+
 import {
     gamePlatforms,
     type GamePlatformId,
@@ -26,6 +27,7 @@ import {
 import type { Language } from "../i18n/translations";
 import { searchTranslations } from "../i18n/searchTranslations";
 import { barPickerTranslations } from "../i18n/barPickerTranslations";
+
 import {
     cinemaSearchMessages,
     bowlingSearchMessages,
@@ -34,15 +36,30 @@ import {
 import { searchStyles as styles } from "../styles/search.styles";
 
 import GamePickerModal from "../components/GamePickerModal";
-import BarPickerModal from "../components/BarPickerModal";
 import PlacePickerModal from "../components/PlacePickerModal";
+import PlaceDetailsModal from "../components/PlaceDetailsModal";
 
 import type { Game } from "../services/gamesApi";
-import { getUserCoordinates } from "../services/locationService";
-import { getBars, type Bar } from "../services/barsApi";
-import { getPlaces, type Place } from "../services/placesApi";
+
+import type {
+    Place,
+    PlaceCategory,
+} from "../services/placesApi";
+
+import { usePlaceSearch } from "../hooks/usePlaceSearch";
+
+// RU: Данные для универсального окна информации.
+// DE: Daten für das universelle Informationsfenster.
+type PlaceDetails = {
+    place: Place;
+    icon: string;
+};
 
 export default function SearchScreen() {
+    // -----------------------------------------------
+    // LANGUAGE
+    // -----------------------------------------------
+
     const [language, setLanguage] = useState<Language>("ru");
 
     const t = searchTranslations[language];
@@ -66,7 +83,8 @@ export default function SearchScreen() {
     const [platformModalVisible, setPlatformModalVisible] =
         useState(false);
 
-    const [selectedGames, setSelectedGames] = useState<Game[]>([]);
+    const [selectedGames, setSelectedGames] =
+        useState<Game[]>([]);
 
     const [gamePickerVisible, setGamePickerVisible] =
         useState(false);
@@ -74,56 +92,55 @@ export default function SearchScreen() {
     const openGamePickerAfterDismiss = useRef(false);
 
     // -----------------------------------------------
-    // BARS
+    // PLACES SEARCH
     // -----------------------------------------------
 
-    const [barModalVisible, setBarModalVisible] = useState(false);
-    const [barLoading, setBarLoading] = useState(false);
-    const [foundBars, setFoundBars] = useState<Bar[]>([]);
-    const [selectedBar, setSelectedBar] = useState<Bar | null>(null);
-    const [barDetailsVisible, setBarDetailsVisible] =
+    // RU: Отдельный поиск для каждой категории.
+    // DE: Separate Suche für jede Ortskategorie.
+    const barsSearch = usePlaceSearch("bars");
+    const cinemasSearch = usePlaceSearch("cinemas");
+    const bowlingSearch = usePlaceSearch("bowling");
+
+    // RU: Состояния окон выбора заведений.
+    // DE: Zustände der Ortsauswahlfenster.
+    const [barModalVisible, setBarModalVisible] =
         useState(false);
-
-    // -----------------------------------------------
-    // CINEMAS
-    // -----------------------------------------------
 
     const [movieModalVisible, setMovieModalVisible] =
         useState(false);
 
-    const [cinemaLoading, setCinemaLoading] = useState(false);
+    const [bowlingModalVisible, setBowlingModalVisible] =
+        useState(false);
 
-    const [foundCinemas, setFoundCinemas] =
-        useState<Place[]>([]);
+    // RU: Выбранные заведения каждой категории.
+    // DE: Ausgewählte Orte jeder Kategorie.
+    const [selectedBar, setSelectedBar] =
+        useState<Place | null>(null);
 
     const [selectedCinema, setSelectedCinema] =
         useState<Place | null>(null);
 
-    const [cinemaDetailsVisible, setCinemaDetailsVisible] =
-        useState(false);
-
-    // -----------------------------------------------
-    // BOWLING
-    // -----------------------------------------------
-
-    // RU: Окно поиска боулинга.
-    // DE: Modalfenster für die Bowlingsuche.
-    const [bowlingModalVisible, setBowlingModalVisible] =
-        useState(false);
-
-    const [bowlingLoading, setBowlingLoading] =
-        useState(false);
-
-    // RU: Найденные и выбранные заведения.
-    // DE: Gefundene und ausgewählte Bowlingcenter.
-    const [foundBowling, setFoundBowling] =
-        useState<Place[]>([]);
-
     const [selectedBowling, setSelectedBowling] =
         useState<Place | null>(null);
 
-    const [bowlingDetailsVisible, setBowlingDetailsVisible] =
-        useState(false);
+    // -----------------------------------------------
+    // UNIVERSAL PLACE DETAILS
+    // -----------------------------------------------
+
+    // RU: Одно состояние вместо трёх отдельных окон.
+    // DE: Ein Zustand statt drei separater Fenster.
+    const [placeDetails, setPlaceDetails] =
+        useState<PlaceDetails | null>(null);
+
+    // RU: Показываем информацию о выбранном месте.
+    // DE: Informationen zum ausgewählten Ort anzeigen.
+    function openPlaceDetails(place: Place, icon: string) {
+        setPlaceDetails({ place, icon });
+    }
+
+    function closePlaceDetails() {
+        setPlaceDetails(null);
+    }
 
     // -----------------------------------------------
     // SEARCH SETTINGS
@@ -132,10 +149,44 @@ export default function SearchScreen() {
     const canSearch =
         selectedCategory !== null &&
         (selectedCategory !== "gaming" ||
-            (selectedPlatform !== null && selectedGames.length > 0));
+            (selectedPlatform !== null &&
+                selectedGames.length > 0));
 
     const categoryHeight =
         height < 700 ? 60 : height < 800 ? 75 : 90;
+
+    // RU: Определяем выбранное заведение и его оформление.
+    // DE: Ausgewählten Ort und dessen Darstellung bestimmen.
+    const selectedPlace =
+        selectedCategory === "bars"
+            ? selectedBar
+            : selectedCategory === "movies"
+                ? selectedCinema
+                : selectedCategory === "bowling"
+                    ? selectedBowling
+                    : null;
+
+    const selectedPlaceIcon =
+        selectedCategory === "bars"
+            ? "🍸"
+            : selectedCategory === "movies"
+                ? "🎬"
+                : selectedCategory === "bowling"
+                    ? "🎳"
+                    : "📍";
+
+    const selectedPlaceLabel =
+        selectedCategory === "bars"
+            ? barT.selectedBar
+            : selectedCategory === "movies"
+                ? cinemaT.selectedCinema
+                : selectedCategory === "bowling"
+                    ? bowlingT.selectedPlace
+                    : t.distance;
+
+    // -----------------------------------------------
+    // CATEGORY HANDLERS
+    // -----------------------------------------------
 
     function selectCategory(id: SearchCategoryId) {
         if (id === "gaming") {
@@ -156,8 +207,6 @@ export default function SearchScreen() {
             return;
         }
 
-        // RU: Открываем поиск боулинга.
-        // DE: Bowlingsuche öffnen.
         if (id === "bowling") {
             setSelectedCategory("bowling");
             setBowlingModalVisible(true);
@@ -169,6 +218,8 @@ export default function SearchScreen() {
         );
     }
 
+    // RU: Главная кнопка поиска.
+    // DE: Hauptschaltfläche für die Suche.
     function handleSearch() {
         if (!selectedCategory) {
             Alert.alert(t.selectCategory);
@@ -194,38 +245,46 @@ export default function SearchScreen() {
     }
 
     // -----------------------------------------------
-    // BAR SEARCH
+    // UNIVERSAL PLACE SEARCH
     // -----------------------------------------------
 
-    async function handleBarSearch(radius: number) {
-        if (barLoading) return;
-
-        if (radius > 50) {
-            Alert.alert(
-                barT.radiusErrorTitle,
-                barT.radiusErrorMessage
-            );
-            return;
-        }
-
-        setBarLoading(true);
-        setFoundBars([]);
+    // RU: Один обработчик для всех типов заведений.
+    // DE: Ein Suchhandler für alle Ortskategorien.
+    async function handlePlaceSearch(
+        category: PlaceCategory,
+        radius: number
+    ) {
+        const placeSearch =
+            category === "bars"
+                ? barsSearch
+                : category === "cinemas"
+                    ? cinemasSearch
+                    : bowlingSearch;
 
         try {
-            const coordinates = await getUserCoordinates();
+            const results = await placeSearch.search(radius);
 
-            const bars = await getBars({
-                coordinates,
-                radius,
-            });
+            // RU: Запрос уже выполняется.
+            // DE: Eine Anfrage wird bereits ausgeführt.
+            if (results === null) return;
 
-            setFoundBars(bars);
-
-            if (bars.length === 0) {
-                Alert.alert(
-                    barT.noBarsTitle,
-                    barT.noBarsMessage
-                );
+            if (results.length === 0) {
+                if (category === "bars") {
+                    Alert.alert(
+                        barT.noBarsTitle,
+                        barT.noBarsMessage
+                    );
+                } else if (category === "cinemas") {
+                    Alert.alert(
+                        cinemaT.noResultsTitle,
+                        cinemaT.noResultsMessage
+                    );
+                } else {
+                    Alert.alert(
+                        bowlingT.noResultsTitle,
+                        bowlingT.noResultsMessage
+                    );
+                }
             }
         } catch (error) {
             if (
@@ -236,129 +295,27 @@ export default function SearchScreen() {
                     barT.locationErrorTitle,
                     barT.locationErrorMessage
                 );
-            } else {
-                console.error("Bar search failed:", error);
+                return;
+            }
+
+            console.error(`${category} search failed:`, error);
+
+            if (category === "bars") {
                 Alert.alert(
                     barT.searchErrorTitle,
                     barT.searchErrorMessage
                 );
-            }
-        } finally {
-            setBarLoading(false);
-        }
-    }
-
-    // -----------------------------------------------
-    // CINEMA SEARCH
-    // -----------------------------------------------
-
-    async function handleCinemaSearch(radius: number) {
-        if (cinemaLoading) return;
-
-        if (
-            !Number.isInteger(radius) ||
-            radius < 1 ||
-            radius > 50
-        ) {
-            return;
-        }
-
-        setCinemaLoading(true);
-        setFoundCinemas([]);
-
-        try {
-            const coordinates = await getUserCoordinates();
-
-            const cinemas = await getPlaces({
-                coordinates,
-                radius,
-                category: "cinemas",
-            });
-
-            setFoundCinemas(cinemas);
-
-            if (cinemas.length === 0) {
-                Alert.alert(
-                    cinemaT.noResultsTitle,
-                    cinemaT.noResultsMessage
-                );
-            }
-        } catch (error) {
-            if (
-                error instanceof Error &&
-                error.message === "LOCATION_PERMISSION_DENIED"
-            ) {
-                Alert.alert(
-                    barT.locationErrorTitle,
-                    barT.locationErrorMessage
-                );
-            } else {
-                console.error("Cinema search failed:", error);
+            } else if (category === "cinemas") {
                 Alert.alert(
                     cinemaT.errorTitle,
                     cinemaT.errorMessage
                 );
-            }
-        } finally {
-            setCinemaLoading(false);
-        }
-    }
-
-    // -----------------------------------------------
-    // BOWLING SEARCH
-    // -----------------------------------------------
-
-    // RU: Запрос к Google Places только после нажатия.
-    // DE: Google-Places-Anfrage nur nach Tastendruck.
-    async function handleBowlingSearch(radius: number) {
-        if (bowlingLoading) return;
-
-        if (
-            !Number.isInteger(radius) ||
-            radius < 1 ||
-            radius > 50
-        ) {
-            return;
-        }
-
-        setBowlingLoading(true);
-        setFoundBowling([]);
-
-        try {
-            const coordinates = await getUserCoordinates();
-
-            const bowlingPlaces = await getPlaces({
-                coordinates,
-                radius,
-                category: "bowling",
-            });
-
-            setFoundBowling(bowlingPlaces);
-
-            if (bowlingPlaces.length === 0) {
-                Alert.alert(
-                    bowlingT.noResultsTitle,
-                    bowlingT.noResultsMessage
-                );
-            }
-        } catch (error) {
-            if (
-                error instanceof Error &&
-                error.message === "LOCATION_PERMISSION_DENIED"
-            ) {
-                Alert.alert(
-                    barT.locationErrorTitle,
-                    barT.locationErrorMessage
-                );
             } else {
-                console.error("Bowling search failed:", error);
                 Alert.alert(
                     bowlingT.errorTitle,
                     bowlingT.errorMessage
                 );
             }
-        } finally {
-            setBowlingLoading(false);
         }
     }
 
@@ -415,8 +372,13 @@ export default function SearchScreen() {
 
                 {/* TITLES */}
 
-                <Text style={styles.title}>{t.title}</Text>
-                <Text style={styles.subtitle}>{t.subtitle}</Text>
+                <Text style={styles.title}>
+                    {t.title}
+                </Text>
+
+                <Text style={styles.subtitle}>
+                    {t.subtitle}
+                </Text>
 
                 <Text style={styles.sectionTitle}>
                     {t.categoriesTitle}
@@ -464,20 +426,27 @@ export default function SearchScreen() {
                     })}
                 </View>
 
-                {/* BOTTOM SECTION */}
+                {/* -----------------------------------------
+            BOTTOM SECTION
+        ----------------------------------------- */}
 
                 <View style={styles.bottomSection}>
                     <View style={styles.distanceContainer}>
-                        {selectedCategory === "bars" && selectedBar ? (
+                        {selectedPlace ? (
                             <>
                                 <Text style={styles.distanceTitle}>
-                                    🍸 {barT.selectedBar}
+                                    {selectedPlaceIcon} {selectedPlaceLabel}
                                 </Text>
 
                                 <Pressable
-                                    onPress={() => setBarDetailsVisible(true)}
+                                    onPress={() =>
+                                        openPlaceDetails(
+                                            selectedPlace,
+                                            selectedPlaceIcon
+                                        )
+                                    }
                                     accessibilityRole="button"
-                                    accessibilityLabel={selectedBar.name}
+                                    accessibilityLabel={selectedPlace.name}
                                     style={styles.selectedBarButton}
                                 >
                                     <Text
@@ -485,59 +454,7 @@ export default function SearchScreen() {
                                         numberOfLines={1}
                                         ellipsizeMode="tail"
                                     >
-                                        {selectedBar.name}
-                                    </Text>
-
-                                    <Text style={styles.selectedBarArrow}>
-                                        ›
-                                    </Text>
-                                </Pressable>
-                            </>
-                        ) : selectedCategory === "movies" &&
-                        selectedCinema ? (
-                            <>
-                                <Text style={styles.distanceTitle}>
-                                    🎬 {cinemaT.selectedCinema}
-                                </Text>
-
-                                <Pressable
-                                    onPress={() => setCinemaDetailsVisible(true)}
-                                    accessibilityRole="button"
-                                    accessibilityLabel={selectedCinema.name}
-                                    style={styles.selectedBarButton}
-                                >
-                                    <Text
-                                        style={styles.distanceValue}
-                                        numberOfLines={1}
-                                        ellipsizeMode="tail"
-                                    >
-                                        {selectedCinema.name}
-                                    </Text>
-
-                                    <Text style={styles.selectedBarArrow}>
-                                        ›
-                                    </Text>
-                                </Pressable>
-                            </>
-                        ) : selectedCategory === "bowling" &&
-                        selectedBowling ? (
-                            <>
-                                <Text style={styles.distanceTitle}>
-                                    🎳 {bowlingT.selectedPlace}
-                                </Text>
-
-                                <Pressable
-                                    onPress={() => setBowlingDetailsVisible(true)}
-                                    accessibilityRole="button"
-                                    accessibilityLabel={selectedBowling.name}
-                                    style={styles.selectedBarButton}
-                                >
-                                    <Text
-                                        style={styles.distanceValue}
-                                        numberOfLines={1}
-                                        ellipsizeMode="tail"
-                                    >
-                                        {selectedBowling.name}
+                                        {selectedPlace.name}
                                     </Text>
 
                                     <Text style={styles.selectedBarArrow}>
@@ -576,7 +493,9 @@ export default function SearchScreen() {
                 </View>
             </View>
 
-            {/* GAME PLATFORM MODAL */}
+            {/* -----------------------------------------
+          GAME PLATFORM MODAL
+      ----------------------------------------- */}
 
             <Modal
                 visible={platformModalVisible}
@@ -660,186 +579,86 @@ export default function SearchScreen() {
                 platform={selectedPlatform}
                 language={language}
                 selectedGames={selectedGames}
-                onClose={() => setGamePickerVisible(false)}
+                onClose={() =>
+                    setGamePickerVisible(false)
+                }
                 onConfirm={(games) => {
                     setSelectedGames(games);
                     setGamePickerVisible(false);
                 }}
             />
 
-            {/* BAR PICKER */}
+            {/* -----------------------------------------
+          PLACE PICKERS
+      ----------------------------------------- */}
 
-            <BarPickerModal
+            {/* BARS */}
+            <PlacePickerModal
                 visible={barModalVisible}
                 language={language}
-                bars={foundBars}
-                loading={barLoading}
+                category="bars"
+                places={barsSearch.places}
+                loading={barsSearch.loading}
                 onClose={() => setBarModalVisible(false)}
-                onSearch={handleBarSearch}
+                onSearch={(radius) => handlePlaceSearch("bars", radius)}
                 onConfirm={(bar) => {
                     setSelectedBar(bar);
                     setBarModalVisible(false);
                 }}
             />
 
-            {/* CINEMA PICKER */}
+
+            {/* CINEMAS */}
 
             <PlacePickerModal
                 visible={movieModalVisible}
                 language={language}
                 category="cinemas"
-                places={foundCinemas}
-                loading={cinemaLoading}
-                onClose={() => setMovieModalVisible(false)}
-                onSearch={handleCinemaSearch}
+                places={cinemasSearch.places}
+                loading={cinemasSearch.loading}
+                onClose={() =>
+                    setMovieModalVisible(false)
+                }
+                onSearch={(radius) =>
+                    handlePlaceSearch("cinemas", radius)
+                }
                 onConfirm={(cinema) => {
                     setSelectedCinema(cinema);
                     setMovieModalVisible(false);
                 }}
             />
 
-            {/* BOWLING PICKER */}
+            {/* BOWLING */}
 
             <PlacePickerModal
                 visible={bowlingModalVisible}
                 language={language}
                 category="bowling"
-                places={foundBowling}
-                loading={bowlingLoading}
-                onClose={() => setBowlingModalVisible(false)}
-                onSearch={handleBowlingSearch}
+                places={bowlingSearch.places}
+                loading={bowlingSearch.loading}
+                onClose={() =>
+                    setBowlingModalVisible(false)
+                }
+                onSearch={(radius) =>
+                    handlePlaceSearch("bowling", radius)
+                }
                 onConfirm={(place) => {
                     setSelectedBowling(place);
                     setBowlingModalVisible(false);
                 }}
             />
 
-            {/* SELECTED BAR DETAILS */}
+            {/* -----------------------------------------
+          UNIVERSAL PLACE DETAILS
+      ----------------------------------------- */}
 
-            <Modal
-                visible={barDetailsVisible}
-                transparent
-                animationType="fade"
-                onRequestClose={() =>
-                    setBarDetailsVisible(false)
-                }
-            >
-                <View style={styles.barDetailsOverlay}>
-                    <View style={styles.barDetailsCard}>
-                        <Text style={styles.barDetailsIcon}>🍸</Text>
-
-                        <Text style={styles.barDetailsTitle}>
-                            {selectedBar?.name}
-                        </Text>
-
-                        <View style={styles.barDetailsAddressRow}>
-                            <Text style={styles.barDetailsLocationIcon}>
-                                📍
-                            </Text>
-
-                            <Text style={styles.barDetailsAddress}>
-                                {selectedBar?.address}
-                            </Text>
-                        </View>
-
-                        <Pressable
-                            onPress={() => setBarDetailsVisible(false)}
-                            style={styles.barDetailsCloseButton}
-                            accessibilityRole="button"
-                        >
-                            <Text style={styles.barDetailsCloseText}>
-                                {barT.close}
-                            </Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-
-            {/* SELECTED CINEMA DETAILS */}
-
-            <Modal
-                visible={cinemaDetailsVisible}
-                transparent
-                animationType="fade"
-                onRequestClose={() =>
-                    setCinemaDetailsVisible(false)
-                }
-            >
-                <View style={styles.barDetailsOverlay}>
-                    <View style={styles.barDetailsCard}>
-                        <Text style={styles.barDetailsIcon}>🎬</Text>
-
-                        <Text style={styles.barDetailsTitle}>
-                            {selectedCinema?.name}
-                        </Text>
-
-                        <View style={styles.barDetailsAddressRow}>
-                            <Text style={styles.barDetailsLocationIcon}>
-                                📍
-                            </Text>
-
-                            <Text style={styles.barDetailsAddress}>
-                                {selectedCinema?.address}
-                            </Text>
-                        </View>
-
-                        <Pressable
-                            onPress={() =>
-                                setCinemaDetailsVisible(false)
-                            }
-                            style={styles.barDetailsCloseButton}
-                            accessibilityRole="button"
-                        >
-                            <Text style={styles.barDetailsCloseText}>
-                                {barT.close}
-                            </Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-
-            {/* SELECTED BOWLING DETAILS */}
-
-            <Modal
-                visible={bowlingDetailsVisible}
-                transparent
-                animationType="fade"
-                onRequestClose={() =>
-                    setBowlingDetailsVisible(false)
-                }
-            >
-                <View style={styles.barDetailsOverlay}>
-                    <View style={styles.barDetailsCard}>
-                        <Text style={styles.barDetailsIcon}>🎳</Text>
-
-                        <Text style={styles.barDetailsTitle}>
-                            {selectedBowling?.name}
-                        </Text>
-
-                        <View style={styles.barDetailsAddressRow}>
-                            <Text style={styles.barDetailsLocationIcon}>
-                                📍
-                            </Text>
-
-                            <Text style={styles.barDetailsAddress}>
-                                {selectedBowling?.address}
-                            </Text>
-                        </View>
-
-                        <Pressable
-                            onPress={() =>
-                                setBowlingDetailsVisible(false)
-                            }
-                            style={styles.barDetailsCloseButton}
-                            accessibilityRole="button"
-                        >
-                            <Text style={styles.barDetailsCloseText}>
-                                {barT.close}
-                            </Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
+            <PlaceDetailsModal
+                visible={placeDetails !== null}
+                place={placeDetails?.place ?? null}
+                icon={placeDetails?.icon ?? ""}
+                closeLabel={barT.close}
+                onClose={closePlaceDetails}
+            />
         </SafeAreaView>
     );
 }

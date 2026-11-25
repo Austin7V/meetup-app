@@ -7,7 +7,7 @@ type CategoryTranslations = {
     description: string;
     searchButton: string;
     resultsTitle: string;
-    selectBar: string;
+    selectPlace: string;
 };
 
 export const placePickerTranslations: Record<
@@ -21,7 +21,7 @@ export const placePickerTranslations: Record<
                 "Выберите расстояние, на котором хотите найти бары рядом с вами.",
             searchButton: "Найти бары",
             resultsTitle: "Найденные бары",
-            selectBar: "Выберите бар из списка",
+            selectPlace: "Выберите бар из списка",
         },
         cinemas: {
             title: "Поиск кинотеатров",
@@ -29,7 +29,7 @@ export const placePickerTranslations: Record<
                 "Выберите расстояние, на котором хотите найти кинотеатры рядом с вами.",
             searchButton: "Найти кинотеатры",
             resultsTitle: "Найденные кинотеатры",
-            selectBar: "Выберите кинотеатр из списка",
+            selectPlace: "Выберите кинотеатр из списка",
         },
         bowling: {
             title: "Поиск боулинга",
@@ -37,7 +37,7 @@ export const placePickerTranslations: Record<
                 "Выберите расстояние, на котором хотите найти боулинг рядом с вами.",
             searchButton: "Найти боулинг",
             resultsTitle: "Найденные боулинг-центры",
-            selectBar: "Выберите заведение из списка",
+            selectPlace: "Выберите заведение из списка",
         },
     },
 
@@ -48,7 +48,7 @@ export const placePickerTranslations: Record<
                 "Wähle die Entfernung aus, in der du Bars in deiner Nähe finden möchtest.",
             searchButton: "Bars finden",
             resultsTitle: "Gefundene Bars",
-            selectBar: "Wähle eine Bar aus der Liste",
+            selectPlace: "Wähle eine Bar aus der Liste",
         },
         cinemas: {
             title: "Kinos suchen",
@@ -56,7 +56,7 @@ export const placePickerTranslations: Record<
                 "Wähle die Entfernung aus, in der du Kinos in deiner Nähe finden möchtest.",
             searchButton: "Kinos finden",
             resultsTitle: "Gefundene Kinos",
-            selectBar: "Wähle ein Kino aus der Liste",
+            selectPlace: "Wähle ein Kino aus der Liste",
         },
         bowling: {
             title: "Bowling suchen",
@@ -64,7 +64,7 @@ export const placePickerTranslations: Record<
                 "Wähle die Entfernung aus, in der du Bowlingcenter in deiner Nähe finden möchtest.",
             searchButton: "Bowlingcenter finden",
             resultsTitle: "Gefundene Bowlingcenter",
-            selectBar: "Wähle ein Bowlingcenter aus der Liste",
+            selectPlace: "Wähle ein Bowlingcenter aus der Liste",
         },
     },
 
@@ -75,7 +75,7 @@ export const placePickerTranslations: Record<
                 "Choose the distance within which you want to find nearby bars.",
             searchButton: "Find bars",
             resultsTitle: "Bars found",
-            selectBar: "Select a bar from the list",
+            selectPlace: "Select a bar from the list",
         },
         cinemas: {
             title: "Find cinemas",
@@ -83,7 +83,7 @@ export const placePickerTranslations: Record<
                 "Choose the distance within which you want to find nearby cinemas.",
             searchButton: "Find cinemas",
             resultsTitle: "Cinemas found",
-            selectBar: "Select a cinema from the list",
+            selectPlace: "Select a cinema from the list",
         },
         bowling: {
             title: "Find bowling alleys",
@@ -91,7 +91,7 @@ export const placePickerTranslations: Record<
                 "Choose the distance within which you want to find nearby bowling alleys.",
             searchButton: "Find bowling alleys",
             resultsTitle: "Bowling alleys found",
-            selectBar: "Select a bowling alley from the list",
+            selectPlace: "Select a bowling alley from the list",
         },
     },
 };
