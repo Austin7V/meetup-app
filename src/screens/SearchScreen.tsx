@@ -19,32 +19,42 @@ import {
     type SearchCategoryId,
 } from "../constants/searchCategories";
 
-import type { Language } from "../i18n/translations";
-import { searchTranslations } from "../i18n/searchTranslations";
-import { searchStyles as styles } from "../styles/search.styles";
-
 import {
     gamePlatforms,
     type GamePlatformId,
 } from "../constants/gamePlatforms";
 
+import type { Language } from "../i18n/translations";
+import { searchTranslations } from "../i18n/searchTranslations";
+import { barPickerTranslations } from "../i18n/barPickerTranslations";
+
+import { searchStyles as styles } from "../styles/search.styles";
+
 import GamePickerModal from "../components/GamePickerModal";
 import BarPickerModal from "../components/BarPickerModal";
+import PlacePickerModal from "../components/PlacePickerModal";
+
 import type { Game } from "../services/gamesApi";
 import { getUserCoordinates } from "../services/locationService";
 import { getBars, type Bar } from "../services/barsApi";
-import { barPickerTranslations } from "../i18n/barPickerTranslations";
+import type { Place } from "../services/placesApi";
+import { getPlaces } from "../services/placesApi";
+import { cinemaSearchMessages } from "../i18n/placePickerTranslations";
 
 export default function SearchScreen() {
     const [language, setLanguage] = useState<Language>("ru");
     const t = searchTranslations[language];
     const barT = barPickerTranslations[language];
-
+    const cinemaT = cinemaSearchMessages[language];
     const insets = useSafeAreaInsets();
     const { height } = useWindowDimensions();
 
     const [selectedCategory, setSelectedCategory] =
         useState<SearchCategoryId | null>(null);
+
+    // --------------------------------------------------
+    // GAMING
+    // --------------------------------------------------
 
     const [selectedPlatform, setSelectedPlatform] =
         useState<GamePlatformId | null>(null);
@@ -53,20 +63,61 @@ export default function SearchScreen() {
         useState(false);
 
     const [selectedGames, setSelectedGames] = useState<Game[]>([]);
-    const [gamePickerVisible, setGamePickerVisible] = useState(false);
+
+    const [gamePickerVisible, setGamePickerVisible] =
+        useState(false);
 
     const openGamePickerAfterDismiss = useRef(false);
 
-    const [barModalVisible, setBarModalVisible] = useState(false);
+    // --------------------------------------------------
+    // BARS
+    // --------------------------------------------------
+
+    const [barModalVisible, setBarModalVisible] =
+        useState(false);
+
     const [barLoading, setBarLoading] = useState(false);
+
     const [foundBars, setFoundBars] = useState<Bar[]>([]);
-    const [selectedBar, setSelectedBar] = useState<Bar | null>(null);
-    const [barDetailsVisible, setBarDetailsVisible] = useState(false);
+
+    const [selectedBar, setSelectedBar] =
+        useState<Bar | null>(null);
+
+    const [barDetailsVisible, setBarDetailsVisible] =
+        useState(false);
+
+    // --------------------------------------------------
+    // CINEMAS
+    // --------------------------------------------------
+
+    // RU: Управляет окном поиска кинотеатров.
+    // DE: Steuert das Modalfenster zur Kinosuche.
+    const [movieModalVisible, setMovieModalVisible] =
+        useState(false);
+
+    // RU: Список найденных кинотеатров.
+    // DE: Liste der gefundenen Kinos.
+    const [foundCinemas, setFoundCinemas] =
+        useState<Place[]>([]);
+
+    // RU: Выбранный кинотеатр.
+    // DE: Ausgewähltes Kino.
+    const [selectedCinema, setSelectedCinema] =
+        useState<Place | null>(null);
+
+    // RU: Состояние загрузки кинотеатров.
+    // DE: Ladezustand der Kinosuche.
+    const [cinemaLoading, setCinemaLoading] = useState(false);
+
+    // --------------------------------------------------
+    // SEARCH SETTINGS
+    // --------------------------------------------------
 
     const canSearch =
         selectedCategory !== null &&
         (selectedCategory !== "gaming" ||
-            (selectedPlatform !== null && selectedGames.length > 0));
+            (selectedPlatform !== null &&
+                selectedGames.length > 0));
 
     const categoryHeight =
         height < 700 ? 60 : height < 800 ? 75 : 90;
@@ -78,17 +129,28 @@ export default function SearchScreen() {
             return;
         }
 
+        // Bars
         if (id === "bars") {
-            setSelectedCategory(id);
+            setSelectedCategory("bars");
             setBarModalVisible(true);
             return;
         }
 
+        // Cinemas
+        if (id === "movies") {
+            setSelectedCategory("movies");
+            setMovieModalVisible(true);
+            return;
+        }
+
+        // Other categories
         setSelectedCategory((current) =>
             current === id ? null : id
         );
     }
 
+    // RU: Обработчик главной кнопки поиска.
+    // DE: Aktion der Hauptsuchschaltfläche.
     function handleSearch() {
         if (!selectedCategory) {
             Alert.alert(t.selectCategory);
@@ -100,14 +162,24 @@ export default function SearchScreen() {
             return;
         }
 
+        if (selectedCategory === "movies") {
+            setMovieModalVisible(true);
+            return;
+        }
+
         Alert.alert(t.title, t.comingSoon);
     }
 
+    // --------------------------------------------------
+    // BAR SEARCH
+    // --------------------------------------------------
 
-
-
+    // RU: Выполняем поиск баров после нажатия кнопки.
+    // DE: Barsuche erst nach einem Tastendruck.
     async function handleBarSearch(radius: number) {
-        if (barLoading) return;
+        if (barLoading) {
+            return;
+        }
 
         if (radius > 50) {
             Alert.alert(
@@ -157,6 +229,68 @@ export default function SearchScreen() {
             setBarLoading(false);
         }
     }
+    // --------------------------------------------------
+    // Cinema SEARCH
+    // --------------------------------------------------
+
+    async function handleCinemaSearch(radius: number) {
+        // RU: Не допускаем повторного запроса во время загрузки.
+        // DE: Doppelte Anfragen während des Ladens verhindern.
+        if (cinemaLoading) return;
+
+        if (!Number.isInteger(radius) || radius < 1 || radius > 50) {
+            return;
+        }
+
+        setCinemaLoading(true);
+        setFoundCinemas([]);
+
+        try {
+            // RU: Получаем координаты iPhone после нажатия кнопки.
+            // DE: Standort erst nach dem Tastendruck ermitteln.
+            const coordinates = await getUserCoordinates();
+
+            // RU: Запрос кинотеатров через наш backend.
+            // DE: Kinos über unser Backend suchen.
+            const cinemas = await getPlaces({
+                coordinates,
+                radius,
+                category: "cinemas",
+            });
+
+            setFoundCinemas(cinemas);
+
+            if (cinemas.length === 0) {
+                Alert.alert(
+                    cinemaT.noResultsTitle,
+                    cinemaT.noResultsMessage
+                );
+            }
+        } catch (error) {
+            if (
+                error instanceof Error &&
+                error.message === "LOCATION_PERMISSION_DENIED"
+            ) {
+                Alert.alert(
+                    barT.locationErrorTitle,
+                    barT.locationErrorMessage
+                );
+            } else {
+                console.error("Cinema search failed:", error);
+
+                Alert.alert(
+                    cinemaT.errorTitle,
+                    cinemaT.errorMessage
+                );
+            }
+        } finally {
+            setCinemaLoading(false);
+        }
+    }
+
+    // --------------------------------------------------
+    // RENDER
+    // --------------------------------------------------
 
     return (
         <SafeAreaView
@@ -173,8 +307,12 @@ export default function SearchScreen() {
                     },
                 ]}
             >
+                {/* HEADER */}
+
                 <View style={styles.header}>
-                    <Text style={styles.brand}>MEETUP</Text>
+                    <Text style={styles.brand}>
+                        MEETUP
+                    </Text>
 
                     <View style={styles.languageContainer}>
                         {(["ru", "de", "en"] as const).map((lang) => {
@@ -205,12 +343,21 @@ export default function SearchScreen() {
                     </View>
                 </View>
 
-                <Text style={styles.title}>{t.title}</Text>
-                <Text style={styles.subtitle}>{t.subtitle}</Text>
+                {/* SCREEN TITLE */}
+
+                <Text style={styles.title}>
+                    {t.title}
+                </Text>
+
+                <Text style={styles.subtitle}>
+                    {t.subtitle}
+                </Text>
 
                 <Text style={styles.sectionTitle}>
                     {t.categoriesTitle}
                 </Text>
+
+                {/* CATEGORIES */}
 
                 <View style={styles.categoryGrid}>
                     {searchCategories.map((category) => {
@@ -220,7 +367,9 @@ export default function SearchScreen() {
                         return (
                             <Pressable
                                 key={category.id}
-                                onPress={() => selectCategory(category.id)}
+                                onPress={() =>
+                                    selectCategory(category.id)
+                                }
                                 accessibilityRole="button"
                                 accessibilityState={{ selected }}
                                 style={[
@@ -236,11 +385,15 @@ export default function SearchScreen() {
                                 <Text
                                     style={[
                                         styles.categoryLabel,
-                                        selected && styles.categoryLabelSelected,
+                                        selected &&
+                                        styles.categoryLabelSelected,
                                     ]}
                                 >
-                                    {category.id === "gaming" && selectedPlatform
-                                        ? `${t.categories.gaming} · ${t.platforms[selectedPlatform]} (${selectedGames.length})`
+                                    {category.id === "gaming" &&
+                                    selectedPlatform
+                                        ? `${t.categories.gaming} · ${
+                                            t.platforms[selectedPlatform]
+                                        } (${selectedGames.length})`
                                         : t.categories[category.id]}
                                 </Text>
                             </Pressable>
@@ -248,16 +401,21 @@ export default function SearchScreen() {
                     })}
                 </View>
 
+                {/* BOTTOM SECTION */}
+
                 <View style={styles.bottomSection}>
                     <View style={styles.distanceContainer}>
-
-                        {selectedCategory === "bars" && selectedBar ? (
+                        {selectedCategory === "bars" &&
+                        selectedBar ? (
                             <>
                                 <Text style={styles.distanceTitle}>
                                     🍸 {barT.selectedBar}
                                 </Text>
+
                                 <Pressable
-                                    onPress={() => setBarDetailsVisible(true)}
+                                    onPress={() =>
+                                        setBarDetailsVisible(true)
+                                    }
                                     accessibilityRole="button"
                                     accessibilityLabel={selectedBar.name}
                                     style={styles.selectedBarButton}
@@ -276,7 +434,6 @@ export default function SearchScreen() {
                                 </Pressable>
                             </>
                         ) : (
-
                             <>
                                 <Text style={styles.distanceTitle}>
                                     📍 {t.distance}
@@ -289,7 +446,7 @@ export default function SearchScreen() {
                         )}
                     </View>
 
-
+                    {/* MAIN SEARCH BUTTON */}
 
                     <Pressable
                         disabled={!canSearch}
@@ -306,11 +463,18 @@ export default function SearchScreen() {
                     </Pressable>
                 </View>
             </View>
+
+            {/* ------------------------------------------------
+          GAME PLATFORM MODAL
+      ------------------------------------------------ */}
+
             <Modal
                 visible={platformModalVisible}
                 transparent
                 animationType="slide"
-                onRequestClose={() => setPlatformModalVisible(false)}
+                onRequestClose={() =>
+                    setPlatformModalVisible(false)
+                }
                 onDismiss={() => {
                     if (openGamePickerAfterDismiss.current) {
                         openGamePickerAfterDismiss.current = false;
@@ -332,7 +496,9 @@ export default function SearchScreen() {
                             </View>
 
                             <Pressable
-                                onPress={() => setPlatformModalVisible(false)}
+                                onPress={() =>
+                                    setPlatformModalVisible(false)
+                                }
                                 accessibilityRole="button"
                             >
                                 <Text style={styles.platformClose}>
@@ -345,12 +511,17 @@ export default function SearchScreen() {
                             <Pressable
                                 key={platform.id}
                                 onPress={() => {
-                                    if (selectedPlatform !== platform.id) {
+                                    if (
+                                        selectedPlatform !== platform.id
+                                    ) {
                                         setSelectedGames([]);
                                     }
 
                                     setSelectedPlatform(platform.id);
-                                    openGamePickerAfterDismiss.current = true;
+
+                                    openGamePickerAfterDismiss.current =
+                                        true;
+
                                     setPlatformModalVisible(false);
                                 }}
                                 style={[
@@ -360,7 +531,8 @@ export default function SearchScreen() {
                                 ]}
                                 accessibilityRole="button"
                                 accessibilityState={{
-                                    selected: selectedPlatform === platform.id,
+                                    selected:
+                                        selectedPlatform === platform.id,
                                 }}
                             >
                                 <Text style={styles.platformIcon}>
@@ -376,35 +548,68 @@ export default function SearchScreen() {
                 </View>
             </Modal>
 
+            {/* GAME PICKER */}
+
             <GamePickerModal
                 visible={gamePickerVisible}
                 platform={selectedPlatform}
                 language={language}
                 selectedGames={selectedGames}
-                onClose={() => setGamePickerVisible(false)}
+                onClose={() =>
+                    setGamePickerVisible(false)
+                }
                 onConfirm={(games) => {
                     setSelectedGames(games);
                     setGamePickerVisible(false);
                 }}
             />
 
+            {/* BAR PICKER */}
+
             <BarPickerModal
                 visible={barModalVisible}
                 language={language}
                 bars={foundBars}
                 loading={barLoading}
-                onClose={() => setBarModalVisible(false)}
+                onClose={() =>
+                    setBarModalVisible(false)
+                }
                 onSearch={handleBarSearch}
                 onConfirm={(bar) => {
                     setSelectedBar(bar);
                     setBarModalVisible(false);
                 }}
             />
+
+            {/* ------------------------------------------------
+          CINEMA PICKER
+      ------------------------------------------------ */}
+
+            <PlacePickerModal
+                visible={movieModalVisible}
+                language={language}
+                category="cinemas"
+                places={foundCinemas}
+                loading={cinemaLoading}
+                onClose={() => setMovieModalVisible(false)}
+                onSearch={handleCinemaSearch}
+                onConfirm={(cinema) => {
+                    setSelectedCinema(cinema);
+                    setMovieModalVisible(false);
+                }}
+            />
+
+            {/* ------------------------------------------------
+          SELECTED BAR DETAILS
+      ------------------------------------------------ */}
+
             <Modal
                 visible={barDetailsVisible}
                 transparent
                 animationType="fade"
-                onRequestClose={() => setBarDetailsVisible(false)}
+                onRequestClose={() =>
+                    setBarDetailsVisible(false)
+                }
             >
                 <View style={styles.barDetailsOverlay}>
                     <View style={styles.barDetailsCard}>
@@ -417,7 +622,9 @@ export default function SearchScreen() {
                         </Text>
 
                         <View style={styles.barDetailsAddressRow}>
-                            <Text style={styles.barDetailsLocationIcon}>
+                            <Text
+                                style={styles.barDetailsLocationIcon}
+                            >
                                 📍
                             </Text>
 
@@ -427,7 +634,9 @@ export default function SearchScreen() {
                         </View>
 
                         <Pressable
-                            onPress={() => setBarDetailsVisible(false)}
+                            onPress={() =>
+                                setBarDetailsVisible(false)
+                            }
                             style={styles.barDetailsCloseButton}
                             accessibilityRole="button"
                         >
@@ -438,7 +647,6 @@ export default function SearchScreen() {
                     </View>
                 </View>
             </Modal>
-
         </SafeAreaView>
     );
 }
