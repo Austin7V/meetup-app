@@ -104,6 +104,7 @@ export const cinemaSearchMessages = {
         errorTitle: "Ошибка поиска",
         errorMessage:
             "Не удалось загрузить кинотеатры. Проверьте подключение к серверу.",
+        selectedCinema: "Выбранный кинотеатр",
     },
     de: {
         noResultsTitle: "Keine Kinos gefunden",
@@ -111,6 +112,7 @@ export const cinemaSearchMessages = {
         errorTitle: "Suchfehler",
         errorMessage:
             "Kinos konnten nicht geladen werden. Überprüfe die Verbindung zum Server.",
+        selectedCinema: "Ausgewähltes Kino",
     },
     en: {
         noResultsTitle: "No cinemas found",
@@ -118,6 +120,31 @@ export const cinemaSearchMessages = {
         errorTitle: "Search error",
         errorMessage:
             "Unable to load cinemas. Check your connection to the server.",
+        selectedCinema: "Selected cinema",
     },
 } satisfies Record<Language, Record<string, string>>;
 
+
+export const bowlingSearchMessages = {
+    ru: {
+        selectedPlace: "Выбранный боулинг",
+        noResultsTitle: "Боулинг не найден",
+        noResultsMessage: "Попробуйте увеличить радиус поиска.",
+        errorTitle: "Ошибка поиска",
+        errorMessage: "Не удалось загрузить заведения. Проверьте подключение к серверу.",
+    },
+    de: {
+        selectedPlace: "Ausgewähltes Bowlingcenter",
+        noResultsTitle: "Keine Bowlingcenter gefunden",
+        noResultsMessage: "Versuche, den Suchradius zu vergrößern.",
+        errorTitle: "Suchfehler",
+        errorMessage: "Bowlingcenter konnten nicht geladen werden. Überprüfe die Verbindung zum Server.",
+    },
+    en: {
+        selectedPlace: "Selected bowling alley",
+        noResultsTitle: "No bowling alleys found",
+        noResultsMessage: "Try increasing the search radius.",
+        errorTitle: "Search error",
+        errorMessage: "Unable to load bowling alleys. Check your connection to the server.",
+    },
+} satisfies Record<Language, Record<string, string>>;
