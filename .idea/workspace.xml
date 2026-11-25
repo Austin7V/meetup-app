@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed719868-cf90-46ec-800e-a7386b3437a1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/PlacePickerModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/i18n/placePickerTranslations.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/services/placesApi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/server/index.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/i18n/placePickerTranslations.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/i18n/placePickerTranslations.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/SearchScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/SearchScreen.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
