@@ -5,13 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed719868-cf90-46ec-800e-a7386b3437a1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/PlaceDetailsModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hooks/usePlaceSearch.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/i18n/placePickerCommonTranslations.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/styles/placePicker.styles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/search-results.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/i18n/searchResultsTranslations.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/screens/SearchResultsScreen.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/styles/searchResults.styles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/userSearch.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/BarPickerModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PlacePickerModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PlacePickerModal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/SearchScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/SearchScreen.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -142,7 +141,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "ref__search__system",
+    "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/sergey/Desktop/git/meetup-app",

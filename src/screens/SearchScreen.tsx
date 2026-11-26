@@ -47,6 +47,7 @@ import type {
 } from "../services/placesApi";
 
 import { usePlaceSearch } from "../hooks/usePlaceSearch";
+import { useRouter } from "expo-router";
 
 // RU: Данные для универсального окна информации.
 // DE: Daten für das universelle Informationsfenster.
@@ -61,7 +62,7 @@ export default function SearchScreen() {
     // -----------------------------------------------
 
     const [language, setLanguage] = useState<Language>("ru");
-
+    const router = useRouter();
     const t = searchTranslations[language];
     const barT = barPickerTranslations[language];
     const cinemaT = cinemaSearchMessages[language];
@@ -218,30 +219,48 @@ export default function SearchScreen() {
         );
     }
 
-    // RU: Главная кнопка поиска.
-    // DE: Hauptschaltfläche für die Suche.
     function handleSearch() {
         if (!selectedCategory) {
             Alert.alert(t.selectCategory);
             return;
         }
-
-        if (selectedCategory === "bars") {
-            setBarModalVisible(true);
+if (
+            selectedCategory === "gaming" &&
+            (!selectedPlatform || selectedGames.length === 0)
+        ) {
+            setPlatformModalVisible(true);
             return;
         }
 
-        if (selectedCategory === "movies") {
-            setMovieModalVisible(true);
-            return;
-        }
+       const selectedPlaceId =
+            selectedCategory === "bars"
+                ? selectedBar?.id
+                : selectedCategory === "movies"
+                    ? selectedCinema?.id
+                    : selectedCategory === "bowling"
+                        ? selectedBowling?.id
+                        : undefined;
 
-        if (selectedCategory === "bowling") {
-            setBowlingModalVisible(true);
-            return;
-        }
-
-        Alert.alert(t.title, t.comingSoon);
+        router.push({
+            pathname: "/search-results",
+            params: {
+                language,
+                category: selectedCategory,
+                ...(selectedPlatform && selectedCategory === "gaming"
+                    ? { platform: selectedPlatform }
+                    : {}),
+                ...(selectedCategory === "gaming"
+                    ? {
+                        gameIds: JSON.stringify(
+                            selectedGames.map((game) => game.id)
+                        ),
+                    }
+                    : {}),
+                ...(selectedPlaceId
+                    ? { placeId: selectedPlaceId }
+                    : {}),
+            },
+        });
     }
 
     // -----------------------------------------------
